@@ -1,0 +1,113 @@
+{{define "title"}}
+{{$typeName := ""}}
+{{if .Spores}}{{$typeName = "spores"}}{{end}}
+{{if .Myc}}{{$typeName    = "mycelium"}}{{end}}
+{{if .Spawn}}{{$typeName  = "spawn"}}{{end}}
+{{if .Grow}}{{$typeName   = "grow"}}{{end}}
+Add {{$typeName}}
+{{end}}
+
+{{define "body"}}
+{{$typeName := ""}}
+{{if .Spores}}{{$typeName = "spores"}}{{end}}
+{{if .Myc}}{{$typeName    = "mycelium"}}{{end}}
+{{if .Spawn}}{{$typeName  = "spawn"}}{{end}}
+{{if .Grow}}{{$typeName   = "grow"}}{{end}}
+{{$abortLink := ""}}
+{{if .Spores}}{{$abortLink = "/spores"}}{{end}}
+{{if .Myc}}{{$abortLink    = "/mycelium"}}{{end}}
+{{if .Spawn}}{{$abortLink  = "/spawn"}}{{end}}
+{{if .Grow}}{{$abortLink   = "/grows"}}{{end}}
+{{$createdAtLabel := ""}}
+{{if .Spores}}{{$createdAtLabel = "Taken at"}}{{end}}
+{{if .Myc}}{{$createdAtLabel    = "Inoculated at"}}{{end}}
+{{if .Spawn}}{{$createdAtLabel  = "Inoculated at"}}{{end}}
+{{if .Grow}}{{$createdAtLabel   = "Created at"}}{{end}}
+<div class="pure-g">
+	<div class="pure-u-1 pure-u-lg-1-24 pure-u-xl-3-24"></div>
+	<div class="pure-u-1 pure-u-md-11-24 pure-u-lg-5-12 pure-u-xl-1-3">
+		<h1>Add created {{$typeName}}</h1>
+		{{if .IsFirst}}
+		<p>
+			This option will be available once the first
+			component has been added.
+		</p>
+		{{else}}
+		<p>
+			Use this option, if you have created
+			{{if .Spores}}these{{else}}this{{end}} {{$typeName}} from
+			a component, that is already tracked.
+			{{if .Spores}}They{{else}}It{{end}} will be connected
+			to the existing lineage.
+		</p>
+		<datalist id="possible-parents">
+			{{range .PossibleParents}}<option value="{{.}}">{{end}}
+		</datalist>
+		<form class="pure-form pure-form-stacked" method="POST" onsubmit="registerSubmit()">
+			<fieldset>
+				<label for="parents">Parents (input their numbers)</label>
+				<div class="pure-g" id="parents">
+					<input list="possible-parents" name="parent1" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()" required>
+					<div class="pure-u-1-12"></div>
+					<input list="possible-parents" name="parent2" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()">
+					<input list="possible-parents" name="parent3" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()">
+					<div class="pure-u-1-12"></div>
+					<input list="possible-parents" name="parent4" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()">
+					<input list="possible-parents" name="parent5" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()">
+					<div class="pure-u-1-12"></div>
+					<input list="possible-parents" name="parent6" class="pure-u-11-24"
+						autocomplete="off" onchange="registerChange()">
+				</div>
+				<label for="notes">Notes</label>
+				<textarea id="notes" name="notes" rows="6" class="pure-input-1"
+					autocomplete="off" onchange="registerChange()"></textarea>
+				<label for="createdAt">{{$createdAtLabel}}</label>
+				<input type="date" name="createdAt" class="pure-input-1" value="{{.Today}}"
+					autocomplete="off" onchange="registerChange()" required>
+				<a href="{{$abortLink}}" class="pure-button">Abort</a>
+				<button type="submit" class="pure-button pure-button-primary">
+					Add {{$typeName}}
+				</button>
+			</fieldset>
+		</form>
+		{{end}}
+	</div>
+	<div class="pure-u-1 pure-u-md-1-12"></div>
+	<div class="pure-u-1 pure-u-md-11-24 pure-u-lg-5-12 pure-u-xl-1-3">
+		<h1>Add acquired {{$typeName}}</h1>
+		<p>
+			Use this option, if you have bought or traded
+			{{if .Spores}}these{{else}}this{{end}} {{$typeName}} or
+			received {{if .Spores}}them{{else}}it{{end}} as a gift.
+			{{if .Spores}}They{{else}}It{{end}} will have no parents
+			and start a new lineage in your collection.
+		</p>
+		<datalist id="known-species">
+			{{range .KnownSpecies}}<option value="{{.}}">{{end}}
+		</datalist>
+		<form class="pure-form pure-form-stacked" method="POST" onsubmit="registerSubmit()">
+			<fieldset>
+				<label for="species">Species</label>
+				<input list="known-species" name="species" id="species" class="pure-input-1"
+					autocomplete="off" onchange="registerChange()" required>
+				<label for="notes">Notes</label>
+				<textarea id="notes" name="notes" rows="6" class="pure-input-1"
+					onchange="registerChange()"></textarea>
+				<label for="createdAt">{{$createdAtLabel}}</label>
+				<input type="date" name="createdAt" class="pure-input-1" value="{{.Today}}"
+					autocomplete="off" onchange="registerChange()" required>
+				<a href="{{$abortLink}}" class="pure-button">Abort</a>
+				<button type="submit" class="pure-button pure-button-primary">
+					Add {{$typeName}}
+				</button>
+			</fieldset>
+		</form>
+	</div>
+	<div class="pure-u-1 pure-u-lg-1-24 pure-u-xl-3-24"></div>
+</div>
+{{end}}

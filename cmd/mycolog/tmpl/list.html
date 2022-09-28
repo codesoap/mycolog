@@ -1,0 +1,80 @@
+{{define "title"}}
+{{$typeName := ""}}
+{{if .SporesSelected}}{{$typeName = "Spores"}}{{end}}
+{{if .MycSelected}}{{$typeName    = "Mycelium"}}{{end}}
+{{if .SpawnSelected}}{{$typeName  = "Spawn"}}{{end}}
+{{if .GrowSelected}}{{$typeName   = "Grows"}}{{end}}
+{{$typeName}}
+{{end}}
+
+{{define "content"}}
+{{$typeName := ""}}
+{{if .SporesSelected}}{{$typeName = "spores"}}{{end}}
+{{if .MycSelected}}{{$typeName    = "mycelium"}}{{end}}
+{{if .SpawnSelected}}{{$typeName  = "spawn"}}{{end}}
+{{if .GrowSelected}}{{$typeName   = "grow"}}{{end}}
+{{$createdAtLabel := ""}}
+{{if .SporesSelected}}{{$createdAtLabel = "Taken at"}}{{end}}
+{{if .MycSelected}}{{$createdAtLabel    = "Inoculated at"}}{{end}}
+{{if .SpawnSelected}}{{$createdAtLabel  = "Inoculated at"}}{{end}}
+{{if .GrowSelected}}{{$createdAtLabel   = "Created at"}}{{end}}
+<table class="pure-table pure-table-striped centered">
+<thead>
+	<tr>
+		<th>#</th>
+		<th>Token</th>
+		<th>Species</th>
+		<th>{{$createdAtLabel}}</th>
+		{{if .ShowGone}}<th>Gone</th>{{end}}
+	</tr>
+</thead>
+<tbody>
+	{{range .Components}}
+	<tr>
+		<td><a class="pure-button" href="component/{{.ID}}">#{{.ID}}</a></td>
+		<td><code>{{.Token}}</code></td>
+		<td>{{.Species}}</td>
+		<td>{{.CreatedAt.Format "2006-01-02"}}</td>
+		{{if $.ShowGone}}<td>{{if .Gone}}yes{{else}}no{{end}}</td>{{end}}
+	</tr>
+	{{end}}
+	<tr>
+		<td colspan="5" align="center">
+			<a class="pure-button" href="add-{{$typeName}}">➕ Add {{$typeName}}</a>
+		</td>
+	</tr>
+</tbody>
+</table>
+{{end}}
+
+{{define "filter"}}
+{{$typeName := ""}}
+{{if .SporesSelected}}{{$typeName = "spores"}}{{end}}
+{{if .MycSelected}}{{$typeName    = "mycelium"}}{{end}}
+{{if .SpawnSelected}}{{$typeName  = "spawn"}}{{end}}
+{{if .GrowSelected}}{{$typeName   = "grows"}}{{end}}
+<form class="pure-form pure-form-stacked filter">
+	{{if gt (len .KnownSpecies) 1}}
+	<label for="species">Species</label>
+	<select name="species" id="species" autocomplete="off">
+		<option>any</option>
+		{{range .KnownSpecies -}}
+		<option{{if eq $.WantedSpecies .}} selected{{end}}>{{.}}</option>
+		{{- end}}
+	</select>
+	{{end}}
+	<label for="show-gone" class="pure-checkbox">
+		<input type="checkbox" name="show-gone" id="show-gone"
+			autocomplete="off" {{if .ShowGone}} checked{{end}}/>
+		List gone {{$typeName}}
+	</label>
+	<label for="show-old" class="pure-checkbox">
+		<input type="checkbox" name="show-old" id="show-old"
+			autocomplete="off" {{if .ShowOld}} checked{{end}}/>
+		List {{$typeName}} older than 30 days
+	</label>
+	<button type="submit" class="pure-button pure-button-primary">
+		Apply filters
+	</button>
+</form>
+{{end}}

@@ -1,0 +1,28 @@
+{{define "filter"}}{{/* Empty fallback. */}}{{end}}
+{{define "body"}}
+<div class="pure-g">
+	<div class="sidebar pure-u-1-4 pure-u-md-1-6 pure-menu">
+		<ul class="pure-menu-list">
+			<li class="pure-menu-item{{if .IntroSelected}} pure-menu-selected{{end}}">
+				<a href="/intro" class="pure-menu-link">Intro</a>
+			</li>
+			<li class="pure-menu-item{{if .SporesSelected}} pure-menu-selected{{end}}">
+				<a href="/spores" class="pure-menu-link">Spores</a>
+			</li>
+			<li class="pure-menu-item{{if .MycSelected}} pure-menu-selected{{end}}">
+				<a href="/mycelium" class="pure-menu-link">Mycelium</a>
+			</li>
+			<li class="pure-menu-item{{if .SpawnSelected}} pure-menu-selected{{end}}">
+				<a href="/spawn" class="pure-menu-link">Spawn</a>
+			</li>
+			<li class="pure-menu-item{{if .GrowSelected}} pure-menu-selected{{end}}">
+				<a href="/grows" class="pure-menu-link">Grows</a>
+			</li>
+		</ul>
+		{{template "filter" .}}
+	</div>
+	<div class="main pure-u-3-4 pure-u-md-5-6">
+		{{template "content" .}}
+	</div>
+</div>
+{{end}}

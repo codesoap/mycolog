@@ -1,0 +1,7 @@
+{{define "title"}}Error{{end}}
+{{define "body"}}
+<div class="centered" id="err-div">
+	<p>An error occurred: {{.ErrorMsg}}.</p>
+	<a class="pure-button pure-button-primary" href="{{.Redirect}}">OK</a>
+</div>
+{{end}}
