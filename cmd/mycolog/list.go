@@ -48,8 +48,8 @@ func serveComponentList(w http.ResponseWriter, r *http.Request) {
 		Components:     components,
 		KnownSpecies:   knownSpecies,
 		WantedSpecies:  r.FormValue("species"),
-		ShowGone:       len(r.FormValue("show-gone")) > 0,
-		ShowOld:        len(r.FormValue("show-old")) > 0,
+		ShowGone:       len(r.FormValue("gone")) > 0,
+		ShowOld:        len(r.FormValue("old")) > 0,
 	}
 	if err := tmpls["list"].Execute(w, data); err != nil {
 		log.Println(err.Error())
@@ -64,11 +64,11 @@ func getComponentFilter(componentType store.ComponentType, r *http.Request) stor
 	if len(wantedSpecies) > 0 && wantedSpecies != "any" {
 		filter.Species = []string{wantedSpecies}
 	}
-	if len(r.FormValue("show-gone")) == 0 {
+	if len(r.FormValue("gone")) == 0 {
 		showGone := false
 		filter.Gone = &showGone
 	}
-	if len(r.FormValue("show-old")) == 0 {
+	if len(r.FormValue("old")) == 0 {
 		since := time.Now().Add(-30 * time.Hour * 24)
 		filter.Since = &since
 	}
