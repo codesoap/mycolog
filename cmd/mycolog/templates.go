@@ -23,13 +23,13 @@ var tmpls = make(map[string]*template.Template)
 
 func init() {
 	tmplMap := map[string][]string{
-		"intro":         []string{"base", "overview", "intro"},
-		"list":          []string{"base", "overview", "list"},
-		"error":         []string{"base", "error"},
-		"add":           []string{"base", "register_change_script", "add"},
-		"details":       []string{"base", "register_change_script", "details"},
-		"delete":        []string{"base", "delete"},
-		"changeSpecies": []string{"base", "register_change_script", "change_species"},
+		"intro":         {"base", "overview", "intro"},
+		"list":          {"base", "overview", "list"},
+		"error":         {"base", "error"},
+		"add":           {"base", "register_change_script", "add"},
+		"details":       {"base", "register_change_script", "details"},
+		"delete":        {"base", "delete"},
+		"changeSpecies": {"base", "register_change_script", "change_species"},
 	}
 	for k, v := range tmplMap {
 		filenames := make([]string, len(v))

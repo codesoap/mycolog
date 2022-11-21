@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pkg/browser"
 	"github.com/codesoap/mycolog/store"
+	"github.com/pkg/browser"
 )
 
 //go:embed assets

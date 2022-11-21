@@ -37,7 +37,7 @@ func GetAllRelatives(db store.DB, id int64) ([]int64, error) {
 		queue = append(queue, currParents...)
 	}
 	relatives := make([]int64, 0, len(visited))
-	for relative, _ := range visited {
+	for relative := range visited {
 		relatives = append(relatives, relative)
 	}
 	return relatives, nil
