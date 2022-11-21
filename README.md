@@ -19,6 +19,6 @@ If you want to compile the program yourself, do this:
 ```bash
 git clone git@github.com:codesoap/mycolog.git
 cd mycolog
-go install
+go install ./cmd/mycolog/
 # The binary is now at ~/go/bin/mycolog.
 ```
