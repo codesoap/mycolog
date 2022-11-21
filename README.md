@@ -1,5 +1,6 @@
 ![screenshot of overview page](./demo/overview.png)
 ![screenshot of details page](./demo/details.png)
+![demo video](https://github.com/codesoap/mycolog/releases/download/v0.1.0/demo.mp4)
 
 mycolog helps you keep an overview of your mushroom cultivation
 projects. It can store notes for each component, so that it's easier to
