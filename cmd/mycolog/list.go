@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"mycolog/store"
+	"github.com/codesoap/mycolog/store"
 )
 
 type listTmplData struct {

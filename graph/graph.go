@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"mycolog/store"
+	"github.com/codesoap/mycolog/store"
 )
 
 // A Relative represents a component together with its children.

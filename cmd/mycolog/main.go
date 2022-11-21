@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/pkg/browser"
-	"mycolog/store"
+	"github.com/codesoap/mycolog/store"
 )
 
 //go:embed assets

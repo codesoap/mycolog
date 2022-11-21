@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mycolog/store"
+	"github.com/codesoap/mycolog/store"
 )
 
 func serveDeleteComponentDialog(w http.ResponseWriter, r *http.Request) {

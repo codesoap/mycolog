@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mycolog/graph"
+	"github.com/codesoap/mycolog/graph"
 )
 
 type changeSpeciesTmplData struct {

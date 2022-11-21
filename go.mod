@@ -1,4 +1,4 @@
-module mycolog
+module github.com/codesoap/mycolog
 
 go 1.17
 

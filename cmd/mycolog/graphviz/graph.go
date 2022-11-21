@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"mycolog/graph"
-	"mycolog/store"
+	"github.com/codesoap/mycolog/graph"
+	"github.com/codesoap/mycolog/store"
 )
 
 // Render takes a set of relatives and renders them into HTML code, that

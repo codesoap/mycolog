@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"mycolog/cmd/mycolog/graphviz"
-	"mycolog/graph"
-	"mycolog/store"
+	"github.com/codesoap/mycolog/cmd/mycolog/graphviz"
+	"github.com/codesoap/mycolog/graph"
+	"github.com/codesoap/mycolog/store"
 )
 
 type componentTmplData struct {

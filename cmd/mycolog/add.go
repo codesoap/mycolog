@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"mycolog/store"
+	"github.com/codesoap/mycolog/store"
 )
 
 type addComponentTmplData struct {
