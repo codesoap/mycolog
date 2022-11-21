@@ -39,6 +39,7 @@ func handleAddComponent(w http.ResponseWriter, r *http.Request) {
 		}
 		if err != nil {
 			showError(w, err, r.URL.Path)
+			return
 		}
 		http.Redirect(w, r, fmt.Sprint("/component/", id), http.StatusSeeOther)
 		return
