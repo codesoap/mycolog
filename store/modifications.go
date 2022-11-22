@@ -59,9 +59,9 @@ func (db DB) SetParents(child int64, parents []int64) error {
 	return nil
 }
 
-// Update updates the component with the given ID. If the ID does not
-// exist, an error will be returned. createdAt must be after all its
-// parents.
+// UpdateComponent updates the component with the given ID. If the ID
+// does not exist, an error will be returned. createdAt must be after
+// all its parents.
 func (db DB) UpdateComponent(id int64, createdAt time.Time, notes string, gone bool) error {
 	parentIDs, err := db.GetParents(id)
 	if err != nil {
