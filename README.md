@@ -22,3 +22,12 @@ cd mycolog
 go install ./cmd/mycolog/
 # The binary is now at ~/go/bin/mycolog.
 ```
+
+# Backups
+mycolog stores all its data in a single file. On Windows
+you'll find it in your user profile folder, usually
+`C:\Users\<your-username>\mycolog.sqlite3`.
+
+On Linux and other unix-like operating systems, you'll find it at
+`XDG_DATA_HOME`, if this environment variable is set. Otherwise it will
+be located at `~/.local/share/mycolog.sqlite3`.
