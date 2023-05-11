@@ -34,8 +34,7 @@ func handleAddComponent(w http.ResponseWriter, r *http.Request) {
 		if r.FormValue("parent1") == "" {
 			id, err = addAcquiredComponent(r, componentType)
 		} else {
-			// TODO: Enable adding multiple identical components at once.
-			id, err = addCreatedComponent(r, componentType)
+			id, err = addCreatedComponents(r, componentType)
 		}
 		if err != nil {
 			showError(w, err, r.URL.Path)
@@ -105,10 +104,14 @@ func getPossibleParentIdentifiers() ([]string, error) {
 	return identifiers, nil
 }
 
-func addCreatedComponent(r *http.Request, ct store.ComponentType) (int64, error) {
+func addCreatedComponents(r *http.Request, ct store.ComponentType) (int64, error) {
 	createdAt, err := time.Parse("2006-01-02", r.FormValue("createdAt"))
 	if err != nil {
 		return 0, fmt.Errorf("received invalid createdAt value")
+	}
+	amount, err := strconv.Atoi(r.FormValue("amount"))
+	if err != nil || amount < 1 {
+		return 0, fmt.Errorf("received invalid amount value")
 	}
 	parents, species, err := getParents(r, createdAt)
 	if err != nil {
@@ -120,12 +123,21 @@ func addCreatedComponent(r *http.Request, ct store.ComponentType) (int64, error)
 		CreatedAt: createdAt,
 		Notes:     r.FormValue("notes"),
 	}
-	id, _, err := db.AddComponent(component)
-	if err != nil {
-		return id, err
+	var firstID int64
+	for i := 0; i < amount; i++ {
+		id, _, err := db.AddComponent(component)
+		if err != nil {
+			return 0, err
+		}
+		err = db.SetParents(id, parents)
+		if err != nil {
+			return 0, err
+		}
+		if i == 0 {
+			firstID = id
+		}
 	}
-	err = db.SetParents(id, parents)
-	return id, err
+	return firstID, nil
 }
 
 func addAcquiredComponent(r *http.Request, ct store.ComponentType) (int64, error) {

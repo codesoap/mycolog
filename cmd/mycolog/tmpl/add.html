@@ -69,6 +69,9 @@ Add {{$typeName}}
 				<label for="createdAt">{{$createdAtLabel}}</label>
 				<input type="date" name="createdAt" class="pure-input-1" value="{{.Today}}"
 					autocomplete="off" onchange="registerChange()" required>
+				<label for="amount">Amount (create multiple components at once)</label>
+				<input type="number" name="amount" class="pure-input-1" value="1"
+					autocomplete="off" onchange="registerChange()" min="1" max="10">
 				<a href="{{$abortLink}}" class="pure-button">Abort</a>
 				<button type="submit" class="pure-button pure-button-primary">
 					Add {{$typeName}}
