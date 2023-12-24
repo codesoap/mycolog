@@ -21,8 +21,8 @@ var schemaV0 = [...]string{
         CHECK(token <> ''),
         CHECK(createdAt <> '')
     )`,
-	`CREATE INDEX type ON component(species)`,
+	`CREATE INDEX type ON component(type)`,
 	`CREATE INDEX species ON component(species)`,
-	`CREATE INDEX createdAt ON component(species)`,
-	`CREATE INDEX gone ON component(species)`,
+	`CREATE INDEX createdAt ON component(createdAt)`,
+	`CREATE INDEX gone ON component(gone)`,
 }
