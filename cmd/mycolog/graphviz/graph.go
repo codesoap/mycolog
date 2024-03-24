@@ -5,6 +5,7 @@ import (
 	"io"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/codesoap/mycolog/graph"
 	"github.com/codesoap/mycolog/store"
@@ -19,15 +20,25 @@ func Render(relatives []graph.Relative, selectedID int64) (string, error) {
 }
 
 func getGraphDescription(relatives []graph.Relative, selectedID int64) string {
+	ranks := make(map[time.Time][]int64)
 	var desc strings.Builder
 	desc.WriteString("digraph family_tree {\n")
 	for _, relative := range relatives {
 		desc.WriteString(getNodeDesc(relative, selectedID))
+		rank := ranks[relative.Component.CreatedAt]
+		ranks[relative.Component.CreatedAt] = append(rank, relative.Component.ID)
 	}
 	for _, r := range relatives {
 		for _, child := range r.Children {
 			desc.WriteString(fmt.Sprintf("\t%d -> %d\n", r.Component.ID, child))
 		}
+	}
+	for _, rank := range ranks {
+		desc.WriteString("{rank = same;")
+		for _, id := range rank {
+			desc.WriteString(fmt.Sprintf(" %d;", id))
+		}
+		desc.WriteString("}\n")
 	}
 	desc.WriteString("}\n")
 	return desc.String()
