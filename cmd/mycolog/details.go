@@ -17,6 +17,7 @@ import (
 type componentTmplData struct {
 	ID        int64
 	Parents   string // User readable representation of the parents.
+	Transfers *int   // Transfers since spores.
 	Spores    bool
 	Myc       bool
 	Spawn     bool
@@ -88,6 +89,7 @@ func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Compo
 		Updated:   r.FormValue("updated") == "true",
 		ID:        comp.ID,
 		Parents:   parents,
+		Transfers: getTransfersSinceSpores(comp),
 		Spores:    comp.Type == store.TypeSpores,
 		Myc:       comp.Type == store.TypeMycelium,
 		Spawn:     comp.Type == store.TypeSpawn,
@@ -136,4 +138,26 @@ func getGraph(id int64, fullgraph bool) (string, error) {
 		return "", err
 	}
 	return graphviz.Render(relatives, id)
+}
+
+// getTransfersSinceSpores determines how many transfers have happened
+// from spores to comp. This gives a rough estimate of how old the DNA
+// is.
+//
+// If there is no parent that are spores, there are multiple parents
+// somwhere in the lineage or there was an error querying the database,
+// nil will be returned.
+func getTransfersSinceSpores(comp store.Component) *int {
+	for i := 0; ; i++ {
+		if comp.Type == store.TypeSpores {
+			return &i
+		}
+		parents, err := db.GetParents(comp.ID)
+		if err != nil || len(parents) != 1 {
+			return nil
+		}
+		if comp, err = db.GetComponent(parents[0]); err != nil {
+			return nil
+		}
+	}
 }

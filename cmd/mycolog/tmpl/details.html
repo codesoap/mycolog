@@ -41,6 +41,9 @@
 				<span class="pure-form-message">
 					Created from: {{.Parents}}
 				</span>
+				<span class="pure-form-message">
+					Transfers since spores: {{if .Transfers}}{{.Transfers}}{{else}}unknown{{end}}
+				</span>
 				<label for="createdAt">{{$createdAtLabel}}</label>
 				<input type="date" name="createdAt" class="pure-input-1"
 					value="{{.CreatedAt}}" autocomplete="off"
