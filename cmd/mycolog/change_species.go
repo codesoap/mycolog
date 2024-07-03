@@ -36,7 +36,7 @@ func handleChangeSpecies(w http.ResponseWriter, r *http.Request) {
 func serveChangeSpecies(w http.ResponseWriter, id int64) {
 	knownSpecies, err := db.GetAllSpecies()
 	if err != nil {
-		showError(w, err, fmt.Sprintf("/component/", id))
+		showError(w, err, fmt.Sprint("/component/", id))
 		return
 	}
 	w.Header().Add("Content-Type", "text/html")
@@ -57,12 +57,12 @@ func handleUpdateSpecies(w http.ResponseWriter, r *http.Request, id int64) {
 	}
 	relatives, err := graph.GetAllRelatives(db, id)
 	if err != nil {
-		showError(w, err, fmt.Sprintf("/component/", id))
+		showError(w, err, fmt.Sprint("/component/", id))
 		return
 	}
 	err = db.UpdateSpecies(relatives, species)
 	if err != nil {
-		showError(w, err, fmt.Sprintf("/component/", id))
+		showError(w, err, fmt.Sprint("/component/", id))
 		return
 	}
 	http.Redirect(w, r, fmt.Sprint("/component/", id, "?updated=true"), http.StatusSeeOther)
