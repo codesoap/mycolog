@@ -68,7 +68,7 @@ func getComponentFilter(componentType store.ComponentType, r *http.Request) stor
 		showGone := false
 		filter.Gone = &showGone
 	}
-	if len(r.FormValue("old")) == 0 {
+	if componentType == store.TypeMycelium && len(r.FormValue("old")) == 0 {
 		since := time.Now().Add(-30 * time.Hour * 24)
 		filter.Since = &since
 	}

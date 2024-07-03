@@ -68,11 +68,11 @@
 			autocomplete="off" {{if .ShowGone}} checked{{end}}/>
 		List gone {{$typeName}}
 	</label>
-	<label for="old" class="pure-checkbox">
+	{{if .MycSelected}}<label for="old" class="pure-checkbox">
 		<input type="checkbox" name="old" id="old"
 			autocomplete="off" {{if .ShowOld}} checked{{end}}/>
 		List {{$typeName}} older than 30 days
-	</label>
+	</label>{{end}}
 	<button type="submit" class="pure-button pure-button-primary">
 		Apply filters
 	</button>
