@@ -131,6 +131,22 @@ func (db DB) FindComponents(filter ComponentFilter) ([]Component, error) {
 	return getComponentsFromRows(rows)
 }
 
+// GetGrowInfo finds the additional grow information for a component in
+// the database. If there is none, the default info will be returned.
+func (db DB) GetGrowInfo(id int64) (GrowInfo, error) {
+	growInfo := GrowInfo{ID: id}
+	query := `SELECT yield, yieldComment FROM grow WHERE id = ?`
+	rows, err := db.Query(query, id)
+	if err != nil {
+		return growInfo, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		err = rows.Scan(&growInfo.Yield, &growInfo.YieldComment)
+	}
+	return growInfo, err
+}
+
 // GetParents finds all parents for the given child in the database.
 func (db DB) GetParents(child int64) ([]int64, error) {
 	query := `SELECT parent FROM relation WHERE child = ?`

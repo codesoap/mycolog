@@ -29,3 +29,10 @@ type Component struct {
 	Notes string
 	Gone  bool // True, if the component does not exist physically anymore.
 }
+
+// GrowInfo is additional information for a component of TypeGrow.
+type GrowInfo struct {
+	ID           int64
+	Yield        *int // Yield in milligrams.
+	YieldComment string
+}

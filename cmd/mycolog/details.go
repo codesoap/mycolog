@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -27,6 +28,9 @@ type componentTmplData struct {
 	CreatedAt string
 	Notes     string
 	Gone      bool
+
+	Yield        *float64
+	YieldComment string
 
 	Updated bool
 
@@ -69,7 +73,32 @@ func handleUpdateComponent(w http.ResponseWriter, r *http.Request, comp store.Co
 		showError(w, err, r.URL.Path)
 		return
 	}
+	if comp.Type == store.TypeGrow {
+		if err = updateGrowInfo(r, comp.ID); err != nil {
+			showError(w, err, r.URL.Path)
+			return
+		}
+	}
 	http.Redirect(w, r, r.URL.Path+"?updated=true", http.StatusSeeOther)
+}
+
+func updateGrowInfo(r *http.Request, compID int64) error {
+	yieldStr := r.FormValue("yield")
+	yieldComment := r.FormValue("yieldComment")
+	if yieldStr == "" && yieldComment == "" {
+		_, err := db.DeleteGrowInfoIfPresent(compID)
+		return err
+	}
+	var yield *int
+	if yieldStr != "" {
+		yieldFloat, err := strconv.ParseFloat(yieldStr, 64)
+		if err != nil {
+			return err
+		}
+		yieldVal := int(math.Round(yieldFloat * 1_000))
+		yield = &yieldVal
+	}
+	return db.AttachGrowInfo(compID, yield, yieldComment)
 }
 
 func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Component) {
@@ -101,6 +130,11 @@ func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Compo
 		Gone:      comp.Gone,
 		FullGraph: r.FormValue("fullgraph") == "true",
 		Graph:     template.HTML(graph),
+	}
+	if comp.Type == store.TypeGrow {
+		if err := fillYield(&data, comp.ID); err != nil {
+			log.Println(err.Error())
+		}
 	}
 	if err := tmpls["details"].Execute(w, data); err != nil {
 		log.Println(err.Error())
@@ -160,4 +194,17 @@ func getTransfersSinceSpores(comp store.Component) *int {
 			return nil
 		}
 	}
+}
+
+func fillYield(data *componentTmplData, compID int64) error {
+	growInfo, err := db.GetGrowInfo(compID)
+	if err != nil {
+		return err
+	}
+	if growInfo.Yield != nil {
+		yield := float64(*growInfo.Yield) / 1_000
+		data.Yield = &yield
+	}
+	data.YieldComment = growInfo.YieldComment
+	return nil
 }

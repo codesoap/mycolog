@@ -87,6 +87,33 @@ func (db DB) UpdateComponent(id int64, createdAt time.Time, notes string, gone b
 	return err
 }
 
+// AttachGrowInfo adds or updates an entry to the grow table.
+// yield is the total yield of a grow in milligrams.
+func (db DB) AttachGrowInfo(compID int64, yield *int, yieldComment string) error {
+	yieldComment = strings.TrimSpace(yieldComment)
+	query := `INSERT INTO grow (id, yield, yieldComment) ` +
+		`VALUES(?, ?, ?) ` +
+		`ON CONFLICT(id) ` +
+		`DO UPDATE SET ` +
+		`	yield = excluded.yield, ` +
+		`	yieldComment = excluded.yieldComment `
+	_, err := db.Exec(query, compID, yield, yieldComment)
+	return err
+
+}
+
+// DeleteGrowInfoIfPresent deletes the grow info with the given ID.
+// If the entry was successfully removed, true is returned, if there
+// was no entry, false is returned.
+func (db DB) DeleteGrowInfoIfPresent(compID int64) (bool, error) {
+	res, err := db.Exec(`DELETE FROM grow WHERE id = ?`, compID)
+	if err != nil {
+		return false, err
+	}
+	resCount, err := res.RowsAffected()
+	return resCount > 0, err
+}
+
 // UpdateSpecies updates the species of all given ids. Make sure to
 // always update all relatives at once to avoid invalid lineages.
 func (db DB) UpdateSpecies(ids []int64, species string) error {
