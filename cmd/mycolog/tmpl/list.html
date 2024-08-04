@@ -26,6 +26,7 @@
 		<th>Species</th>
 		<th>{{$createdAtLabel}}</th>
 		{{if .ShowGone}}<th>Gone</th>{{end}}
+		{{if .GrowSelected}}<th>Yield</th>{{end}}
 	</tr>
 </thead>
 <tbody>
@@ -36,10 +37,14 @@
 		<td>{{.Species}}</td>
 		<td>{{.CreatedAt.Format "2006-01-02"}}</td>
 		{{if $.ShowGone}}<td>{{if .Gone}}yes{{else}}no{{end}}</td>{{end}}
+		{{if $.GrowSelected}}{{with getYieldString $.Yields .ID -}}
+		<td style="text-align:right"><code>{{.}}</code> g</td>
+		{{- else}}<td>n/a</td>
+		{{- end}}{{end}}
 	</tr>
 	{{end}}
 	<tr>
-		<td colspan="5" align="center">
+		<td colspan="6" align="center">
 			<a class="pure-button" href="add-{{$typeName}}">➕ Add {{$typeName}}</a>
 		</td>
 	</tr>

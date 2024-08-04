@@ -16,6 +16,7 @@ type listTmplData struct {
 	SpawnSelected  bool
 	GrowSelected   bool
 	Components     []store.Component
+	Yields         map[int64]float64 // Yields uses component IDs as keys.
 	KnownSpecies   []string
 	WantedSpecies  string
 	ShowGone       bool
@@ -34,6 +35,14 @@ func serveComponentList(w http.ResponseWriter, r *http.Request) {
 		showError(w, err, "/intro")
 		return
 	}
+	var yields map[int64]float64
+	if componentType == store.TypeGrow {
+		yields, err = getYields(componentFilter)
+		if err != nil {
+			showError(w, err, "/intro")
+			return
+		}
+	}
 	knownSpecies, err := db.GetAllSpecies()
 	if err != nil {
 		showError(w, err, "/intro")
@@ -46,6 +55,7 @@ func serveComponentList(w http.ResponseWriter, r *http.Request) {
 		SpawnSelected:  componentType == store.TypeSpawn,
 		GrowSelected:   componentType == store.TypeGrow,
 		Components:     components,
+		Yields:         yields,
 		KnownSpecies:   knownSpecies,
 		WantedSpecies:  r.FormValue("species"),
 		ShowGone:       len(r.FormValue("gone")) > 0,
@@ -54,6 +64,20 @@ func serveComponentList(w http.ResponseWriter, r *http.Request) {
 	if err := tmpls["list"].Execute(w, data); err != nil {
 		log.Println(err.Error())
 	}
+}
+
+func getYields(compFilter store.ComponentFilter) (map[int64]float64, error) {
+	yields, err := db.GetYields(compFilter)
+	if err != nil {
+		return nil, err
+	}
+	yieldsInGrams := make(map[int64]float64)
+	for compID, yield := range yields {
+		if yield != nil {
+			yieldsInGrams[compID] = float64(*yield) / 1_000
+		}
+	}
+	return yieldsInGrams, nil
 }
 
 func getComponentFilter(componentType store.ComponentType, r *http.Request) store.ComponentFilter {

@@ -3,7 +3,9 @@ package main
 import (
 	"embed"
 	"html/template"
+	"math"
 	"regexp"
+	"strconv"
 )
 
 //go:embed tmpl
@@ -31,11 +33,26 @@ func init() {
 		"delete":        {"base", "delete"},
 		"changeSpecies": {"base", "register_change_script", "change_species"},
 	}
+	funcMap := map[string]any{
+		"getYieldString": getYieldString,
+	}
 	for k, v := range tmplMap {
 		filenames := make([]string, len(v))
 		for i, name := range v {
 			filenames[i] = "tmpl/" + name + ".html"
 		}
-		tmpls[k] = template.Must(template.ParseFS(tmplFS, filenames...))
+		t := template.New("base.html").Funcs(funcMap)
+		tmpls[k] = template.Must(t.ParseFS(tmplFS, filenames...))
 	}
+}
+
+func getYieldString(yields map[int64]float64, compID int64) string {
+	yield, found := yields[compID]
+	if found {
+		if math.Abs(yield-math.Round(yield)) >= 0.001 {
+			return "~" + strconv.FormatFloat(yield, 'f', 0, 64)
+		}
+		return strconv.FormatFloat(yield, 'f', 0, 64)
+	}
+	return ""
 }

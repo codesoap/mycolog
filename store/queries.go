@@ -89,38 +89,10 @@ func (db DB) GetComponents(ids []int64) (components []Component, err error) {
 // FindComponents retrieves all components matching the given filter
 // from the database.
 func (db DB) FindComponents(filter ComponentFilter) ([]Component, error) {
-	args := make([]interface{}, 0)
 	query := `SELECT id, type, species, token, createdAt, notes, gone ` +
 		`FROM component`
-	glue := ` WHERE `
-	if len(filter.Types) > 0 {
-		query += glue + `type IN (?` + strings.Repeat(`, ?`, len(filter.Types)-1) + `)`
-		glue = ` AND `
-		for _, arg := range filter.Types {
-			args = append(args, arg)
-		}
-	}
-	if len(filter.Species) > 0 {
-		query += glue + `species IN (?` + strings.Repeat(`, ?`, len(filter.Species)-1) + `)`
-		glue = ` AND `
-		for _, arg := range filter.Species {
-			args = append(args, arg)
-		}
-	}
-	if filter.Since != nil {
-		query += glue + `createdAt >= ?`
-		glue = ` AND `
-		args = append(args, filter.Since.Format(timeFormat))
-	}
-	if filter.Until != nil {
-		query += glue + `createdAt <= ?`
-		glue = ` AND `
-		args = append(args, filter.Until.Format(timeFormat))
-	}
-	if filter.Gone != nil {
-		query += glue + `gone = ?`
-		args = append(args, *filter.Gone)
-	}
+	where, args := componentFilterToWhereClause(filter)
+	query += where
 	var rows *sql.Rows
 	query += ` ORDER BY createdAt DESC, id DESC`
 	rows, err := db.Query(query, args...)
@@ -145,6 +117,31 @@ func (db DB) GetGrowInfo(id int64) (GrowInfo, error) {
 		err = rows.Scan(&growInfo.Yield, &growInfo.YieldComment)
 	}
 	return growInfo, err
+}
+
+// GetYields finds the yields in milligrams for the components matching
+// the given compFilter.
+func (db DB) GetYields(compFilter ComponentFilter) (map[int64]*int, error) {
+	yields := make(map[int64]*int)
+	query := `SELECT grow.id, grow.yield FROM grow ` +
+		`INNER JOIN component ON component.id = grow.id`
+	where, args := componentFilterToWhereClause(compFilter)
+	query += where
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return yields, err
+	}
+	defer rows.Close()
+	var id int64
+	var yield *int
+	for rows.Next() {
+		err = rows.Scan(&id, &yield)
+		if err != nil {
+			return yields, err
+		}
+		yields[id] = yield
+	}
+	return yields, nil
 }
 
 // GetParents finds all parents for the given child in the database.
@@ -185,6 +182,45 @@ func (db DB) GetChildren(parent int64) ([]int64, error) {
 		children = append(children, child)
 	}
 	return children, nil
+}
+
+func componentFilterToWhereClause(filter ComponentFilter) (string, []any) {
+	whereClause := ""
+	args := make([]any, 0)
+	glue := ` WHERE `
+	if len(filter.Types) > 0 {
+		whereClause += glue + `component.type IN (?` +
+			strings.Repeat(`, ?`, len(filter.Types)-1) +
+			`)`
+		glue = ` AND `
+		for _, arg := range filter.Types {
+			args = append(args, arg)
+		}
+	}
+	if len(filter.Species) > 0 {
+		whereClause += glue + `component.species IN (?` +
+			strings.Repeat(`, ?`, len(filter.Species)-1) +
+			`)`
+		glue = ` AND `
+		for _, arg := range filter.Species {
+			args = append(args, arg)
+		}
+	}
+	if filter.Since != nil {
+		whereClause += glue + `component.createdAt >= ?`
+		glue = ` AND `
+		args = append(args, filter.Since.Format(timeFormat))
+	}
+	if filter.Until != nil {
+		whereClause += glue + `component.createdAt <= ?`
+		glue = ` AND `
+		args = append(args, filter.Until.Format(timeFormat))
+	}
+	if filter.Gone != nil {
+		whereClause += glue + `component.gone = ?`
+		args = append(args, *filter.Gone)
+	}
+	return whereClause, args
 }
 
 func getComponentsFromRows(rows *sql.Rows) (components []Component, err error) {
