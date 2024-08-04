@@ -26,3 +26,13 @@ var schemaV0 = [...]string{
 	`CREATE INDEX createdAt ON component(createdAt)`,
 	`CREATE INDEX gone ON component(gone)`,
 }
+
+var schemaV1 = [...]string{
+	`CREATE TABLE grow(
+		id           INTEGER PRIMARY KEY,
+		yield        INTEGER, -- weight in milligrams
+		yieldComment TEXT DEFAULT '' NOT NULL,
+		CHECK(yield >= 0),
+		FOREIGN KEY(id) REFERENCES component(id)
+	)`,
+}
