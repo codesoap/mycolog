@@ -87,6 +87,22 @@ func (db DB) UpdateComponent(id int64, createdAt time.Time, notes string, gone b
 	return err
 }
 
+// MarkComponentsAsGone sets gone to "true" for the components with the
+// given IDs.
+func (db DB) MarkComponentsAsGone(ids []int64) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	query := `UPDATE component SET gone = 1 ` +
+		`WHERE id IN (` + strings.Repeat("?, ", len(ids)-1) + `?)`
+	args := make([]any, len(ids))
+	for i := range ids {
+		args[i] = ids[i]
+	}
+	_, err := db.Exec(query, args...)
+	return err
+}
+
 // AttachGrowInfo adds or updates an entry to the grow table.
 // yield is the total yield of a grow in milligrams.
 func (db DB) AttachGrowInfo(compID int64, yield *int, yieldComment string) error {

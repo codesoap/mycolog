@@ -72,6 +72,11 @@ Add {{$typeName}}
 				<label for="amount">Amount (create multiple components at once)</label>
 				<input type="number" name="amount" class="pure-input-1" value="1"
 					autocomplete="off" onchange="registerChange()" min="1" max="10">
+				<label for="parentsGone" class="pure-checkbox">
+					<input id="parentsGone" name="parentsGone" type="checkbox" autocomplete="off"
+						value="true" onchange="registerChange()"{{if .Grow}} checked{{end}}>
+					Mark parents as gone
+				</label>
 				<a href="{{$abortLink}}" class="pure-button">Abort</a>
 				<button type="submit" class="pure-button pure-button-primary">
 					Add {{$typeName}}

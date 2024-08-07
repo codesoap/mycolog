@@ -115,6 +115,11 @@ func addCreatedComponents(r *http.Request, ct store.ComponentType) (int64, error
 	if err != nil {
 		return 0, err
 	}
+	if r.FormValue("parentsGone") == "true" {
+		if err = db.MarkComponentsAsGone(parents); err != nil {
+			return 0, err
+		}
+	}
 	component := store.Component{
 		Type:      ct,
 		Species:   species,
