@@ -11,7 +11,7 @@ import (
 //go:embed tmpl
 var tmplFS embed.FS
 
-var reComponentID = regexp.MustCompile("^[0-9]+")
+var reComponentID = regexp.MustCompile("#[0-9]+")
 
 type overviewTmplData struct {
 	IntroSelected  bool

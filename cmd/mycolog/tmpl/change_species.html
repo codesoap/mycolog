@@ -6,10 +6,12 @@ Change species of #{{.ID}}
 	<div class="pure-u-1 pure-u-md-1-3"></div>
 	<div class="pure-u-1 pure-u-md-1-3 centered">
 		<p>
-			Do you really want to change the species of #{{.ID}}?
+			{{- /* TODO: Show token in addition to ID. */ -}}
+			Do you really want to change the species of the
+			component with ID #{{.ID}}?
 		</p>
 		<p>
-			The species of all related component will automatically
+			The species of all related components will automatically
 			be updated as well.
 		</p>
 		<datalist id="known-species">

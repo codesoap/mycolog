@@ -21,7 +21,6 @@
 <table class="pure-table pure-table-striped centered">
 <thead>
 	<tr>
-		<th>#</th>
 		<th>Token</th>
 		<th>Species</th>
 		<th>{{$createdAtLabel}}</th>
@@ -32,8 +31,12 @@
 <tbody>
 	{{range .Components}}
 	<tr>
-		<td><a class="pure-button" href="component/{{.ID}}">#{{.ID}}</a></td>
-		<td><code>{{.Token}}</code></td>
+		<td>
+			<a class="pure-button" href="component/{{.ID}}" 
+				title="Component ID #{{.ID}}">
+				<code>{{.Token}}</code>
+			</a>
+		</td>
 		<td>{{.Species}}</td>
 		<td>{{.CreatedAt.Format "2006-01-02"}}</td>
 		{{if $.ShowGone}}<td>{{if .Gone}}yes{{else}}no{{end}}</td>{{end}}
@@ -44,7 +47,7 @@
 	</tr>
 	{{end}}
 	<tr>
-		<td colspan="6" align="center">
+		<td colspan="5" align="center">
 			<a class="pure-button" href="add-{{$typeName}}">➕ Add {{$typeName}}</a>
 		</td>
 	</tr>

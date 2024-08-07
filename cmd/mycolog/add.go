@@ -77,8 +77,8 @@ func handleAddComponent(w http.ResponseWriter, r *http.Request) {
 }
 
 // getPossibleParentIdentifiers finds components, that are not already
-// gone. They are returned as a string each, which starts with the ID,
-// followed by some more info.
+// gone. They are returned as a string each, which includes the ID,
+// token and type.
 func getPossibleParentIdentifiers() ([]string, error) {
 	gone := false
 	// FIXME: What if the parents were already marked gone?
@@ -88,18 +88,16 @@ func getPossibleParentIdentifiers() ([]string, error) {
 	}
 	identifiers := make([]string, len(components))
 	for i, component := range components {
-		identifier := fmt.Sprint("#", component.ID, " ", component.Token)
 		switch component.Type {
 		case store.TypeSpores:
-			identifier += " (spores)"
+			identifiers[i] = fmt.Sprintf("Spores %s (#%d)", component.Token, component.ID)
 		case store.TypeMycelium:
-			identifier += " (mycelium)"
+			identifiers[i] = fmt.Sprintf("Mycelium %s (#%d)", component.Token, component.ID)
 		case store.TypeSpawn:
-			identifier += " (spawn)"
+			identifiers[i] = fmt.Sprintf("Spawn %s (#%d)", component.Token, component.ID)
 		case store.TypeGrow:
-			identifier += " (grow)"
+			identifiers[i] = fmt.Sprintf("Grow %s (#%d)", component.Token, component.ID)
 		}
-		identifiers[i] = identifier
 	}
 	return identifiers, nil
 }
@@ -169,7 +167,7 @@ func getParents(r *http.Request, createdAt time.Time) (parents []int64, species 
 		if len(formValue) == 0 {
 			continue
 		}
-		idString := reComponentID.FindString(strings.TrimLeft(formValue, "#"))
+		idString := strings.TrimLeft(reComponentID.FindString(formValue), "#")
 		var id int64
 		id, err = strconv.ParseInt(idString, 10, 64)
 		if err != nil {
