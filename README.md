@@ -1,5 +1,5 @@
-![screenshot of overview page](./demo/overview.png)
-![screenshot of details page](./demo/details.png)
+![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/overview.png)
+![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/details.png)
 ![demo video](https://github.com/codesoap/mycolog/releases/download/v0.1.0/demo.mp4)
 
 mycolog helps you keep an overview of your mushroom cultivation
