@@ -23,6 +23,11 @@ go install ./cmd/mycolog/
 # The binary is now at ~/go/bin/mycolog.
 ```
 
+Note that cross compilation is not easily possible, because cgo is
+used in the sqlite3 driver. An icon can be attached to the Windows
+executable file using [rcedit](https://github.com/electron/rcedit):
+`rcedit .\mycolog.exe --set-icon .\docs\favicon\favicon.ico`
+
 # Backups
 mycolog stores all its data in a single file. On Windows
 you'll find it in your user profile folder, usually
