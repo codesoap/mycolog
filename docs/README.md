@@ -7,13 +7,33 @@ mycolog is free and open software and does not connect to the internet.
 Your data stays on your computer alone and there is no risk of losing it
 to a discontinued web service.
 
-# Installation
-Download mycolog for Windows: [mycolog_0.1.0_Windows_amd64.zip](https://github.com/codesoap/mycolog/releases/download/v0.1.0/mycolog_0.1.0_Windows_amd64.zip)
+<video style="max-width:100%" controls>
+	<source src="https://github.com/codesoap/mycolog/releases/download/v0.2.0/demo.mp4">
+	<source src="https://github.com/codesoap/mycolog/releases/download/v0.2.0/demo.webm">
+Your browser does not support playing this video.
+</video>
 
-In order to see family trees, you also need to install Graphviz. You can download it [here](https://graphviz.org/download/#windows).
+# Installation
+Download mycolog for Windows:
+[mycolog.exe](https://github.com/codesoap/mycolog/releases/download/v0.2.0/mycolog.exe)
+
+In order to see family trees, **you also need to install Graphviz**. You
+can download it [here](https://graphviz.org/download/#windows).
+
+To build mycolog for a different operating system and more, take a look
+at [the GitHub page](https://github.com/codesoap/mycolog?tab=readme-ov-file#installation).
 
 # Backups
 mycolog stores all its data in a single file. On Windows
 you'll find it in your user profile folder, usually
 `C:\Users\<your-username>\mycolog.sqlite3`. Make sure to create backups
 of this file, so that your data is not lost when your computer breaks.
+
+On Linux and other unix-like operating systems, you'll find the file at
+`XDG_DATA_HOME`, if this environment variable is set. Otherwise it will
+be located at `~/.local/share/mycolog.sqlite3`.
+
+# Screenshots
+![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/overview.png)
+
+![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/details.png)

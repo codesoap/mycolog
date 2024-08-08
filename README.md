@@ -1,11 +1,14 @@
-![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/overview.png)
-![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/details.png)
-![demo video](https://github.com/codesoap/mycolog/releases/download/v0.1.0/demo.mp4)
-
 mycolog helps you keep an overview of your mushroom cultivation
 projects. It can store notes for each component, so that it's easier to
 remember which experiments succeeded and which failed. Genetics can be
 traced through family trees.
+
+Visit [codesoap.github.io/mycolog](https://codesoap.github.io/mycolog/)
+to see a video introduction to mycolog.
+
+![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/overview.png)
+
+![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.2.0/details.png)
 
 # Installation
 You can download the precompiled program from the
