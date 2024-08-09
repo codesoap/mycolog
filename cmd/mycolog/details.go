@@ -179,7 +179,7 @@ func getGraph(id int64, fullgraph bool) (string, error) {
 // is.
 //
 // If there is no parent that are spores, there are multiple parents
-// somwhere in the lineage or there was an error querying the database,
+// somewhere in the lineage or there was an error querying the database,
 // nil will be returned.
 func getTransfersSinceSpores(comp store.Component) *int {
 	for i := 0; ; i++ {
