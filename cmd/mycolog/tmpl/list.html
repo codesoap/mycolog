@@ -61,10 +61,11 @@
 {{if .MycSelected}}{{$typeName    = "mycelium"}}{{end}}
 {{if .SpawnSelected}}{{$typeName  = "spawn"}}{{end}}
 {{if .GrowSelected}}{{$typeName   = "grows"}}{{end}}
-<form class="pure-form pure-form-stacked filter">
+<form id="filter" class="pure-form pure-form-stacked filter">
 	{{if gt (len .KnownSpecies) 1}}
 	<label for="species">Species</label>
-	<select name="species" id="species" autocomplete="off">
+	<select name="species" id="species" autocomplete="off"
+		onchange="applyFilter()">
 		<option>any</option>
 		{{range .KnownSpecies -}}
 		<option{{if eq $.WantedSpecies .}} selected{{end}}>{{.}}</option>
@@ -72,16 +73,16 @@
 	</select>
 	{{end}}
 	<label for="gone" class="pure-checkbox">
-		<input type="checkbox" name="gone" id="gone"
+		<input type="checkbox" name="gone" id="gone" onchange="applyFilter()"
 			autocomplete="off" {{if .ShowGone}} checked{{end}}/>
 		List gone {{$typeName}}
 	</label>
 	{{if .MycSelected}}<label for="old" class="pure-checkbox">
-		<input type="checkbox" name="old" id="old"
+		<input type="checkbox" name="old" id="old" onchange="applyFilter()"
 			autocomplete="off" {{if .ShowOld}} checked{{end}}/>
 		List {{$typeName}} older than 30 days
 	</label>{{end}}
-	<button type="submit" class="pure-button pure-button-primary">
+	<button id="submitFilter" type="submit" class="pure-button pure-button-primary">
 		Apply filters
 	</button>
 </form>

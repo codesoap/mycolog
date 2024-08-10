@@ -26,7 +26,7 @@ var tmpls = make(map[string]*template.Template)
 func init() {
 	tmplMap := map[string][]string{
 		"intro":         {"base", "overview", "intro"},
-		"list":          {"base", "overview", "list"},
+		"list":          {"base", "auto_apply_filter", "overview", "list"},
 		"error":         {"base", "error"},
 		"add":           {"base", "register_change_script", "add"},
 		"details":       {"base", "register_change_script", "details"},

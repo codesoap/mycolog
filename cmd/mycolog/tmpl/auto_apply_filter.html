@@ -1,0 +1,11 @@
+{{define "script"}}
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('submitFilter').style.display = 'none';
+	});
+
+	function applyFilter() {
+		document.getElementById('filter').submit();
+	}
+</script>
+{{end}}
