@@ -85,16 +85,22 @@
 				</button>
 			</fieldset>
 		</form>
-		{{if .Graph}}<hr>{{end}}
+		<hr>
 	</div>
 	<div class="pure-u-1 pure-u-md-1-24 pure-u-lg-1-8 pure-u-xl-1-4"></div>
 </div>
-{{if .Graph}}
-{{if not .FullGraph}}
 <div class="centered">
+	{{if and .Graph (not .FullGraph)}}
 	<a class="pure-button" href="?fullgraph=true">&uarr; Show all predecessors</a>
+	{{end}}
+	<span id="addComponents" class="pure-button-group" role="group" aria-label="Add component">
+		<a href="/add-spores?from={{.ID}}" class="pure-button">Add Spores</a>
+		<a href="/add-mycelium?from={{.ID}}" class="pure-button">Add Myc.</a>
+		<a href="/add-spawn?from={{.ID}}" class="pure-button">Add Spawn</a>
+		<a href="/add-grow?from={{.ID}}" class="pure-button">Add Grow</a>
+	</span>
 </div>
-{{end}}
+{{if .Graph}}
 <div class="centered">{{.Graph}}</div>
 {{end}}
 {{end}}

@@ -17,6 +17,7 @@ type addComponentTmplData struct {
 	Spawn           bool
 	Grow            bool
 	PossibleParents []string
+	PrefilledParent string
 	KnownSpecies    []string
 	Today           string
 	IsFirst         bool
@@ -43,7 +44,6 @@ func handleAddComponent(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, fmt.Sprint("/component/", id), http.StatusSeeOther)
 		return
 	} else {
-		// TODO: Enable passing prefilled parents via query parameter.
 		possibleParents, err := getPossibleParentIdentifiers()
 		if err != nil {
 			showError(w, err, r.URL.Path)
@@ -66,6 +66,7 @@ func handleAddComponent(w http.ResponseWriter, r *http.Request) {
 			Spawn:           componentType == store.TypeSpawn,
 			Grow:            componentType == store.TypeGrow,
 			PossibleParents: possibleParents,
+			PrefilledParent: getPrefilledParentIdentifier(r.FormValue("from")),
 			KnownSpecies:    knownSpecies,
 			Today:           time.Now().Format("2006-01-02"),
 			IsFirst:         !componentsPresent,
@@ -88,18 +89,38 @@ func getPossibleParentIdentifiers() ([]string, error) {
 	}
 	identifiers := make([]string, len(components))
 	for i, component := range components {
-		switch component.Type {
-		case store.TypeSpores:
-			identifiers[i] = fmt.Sprintf("Spores %s (#%d)", component.Token, component.ID)
-		case store.TypeMycelium:
-			identifiers[i] = fmt.Sprintf("Mycelium %s (#%d)", component.Token, component.ID)
-		case store.TypeSpawn:
-			identifiers[i] = fmt.Sprintf("Spawn %s (#%d)", component.Token, component.ID)
-		case store.TypeGrow:
-			identifiers[i] = fmt.Sprintf("Grow %s (#%d)", component.Token, component.ID)
-		}
+		identifiers[i] = toIdentifier(component)
 	}
 	return identifiers, nil
+}
+
+func getPrefilledParentIdentifier(parentID string) string {
+	if parentID == "" {
+		return ""
+	}
+	id, err := strconv.ParseInt(parentID, 10, 64)
+	if err != nil {
+		return ""
+	}
+	comp, err := db.GetComponent(id)
+	if err != nil {
+		return ""
+	}
+	return toIdentifier(comp)
+}
+
+func toIdentifier(comp store.Component) string {
+	switch comp.Type {
+	case store.TypeSpores:
+		return fmt.Sprintf("Spores %s (#%d)", comp.Token, comp.ID)
+	case store.TypeMycelium:
+		return fmt.Sprintf("Mycelium %s (#%d)", comp.Token, comp.ID)
+	case store.TypeSpawn:
+		return fmt.Sprintf("Spawn %s (#%d)", comp.Token, comp.ID)
+	case store.TypeGrow:
+		return fmt.Sprintf("Grow %s (#%d)", comp.Token, comp.ID)
+	}
+	return fmt.Sprintf("Unknown component %s (#%d)", comp.Token, comp.ID)
 }
 
 func addCreatedComponents(r *http.Request, ct store.ComponentType) (int64, error) {
