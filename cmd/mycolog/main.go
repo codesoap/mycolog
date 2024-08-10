@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"flag"
 	"log"
 	"net/http"
 	"time"
@@ -27,6 +28,9 @@ func init() {
 }
 
 func main() {
+	headless := flag.Bool("headless", false, "run mycolog without opening a browser")
+	flag.Parse()
+
 	http.HandleFunc("/", redirectToDefaultPage)
 	http.Handle("/assets/", http.FileServer(http.FS(assets)))
 	http.HandleFunc("/intro", serveIntro)
@@ -44,7 +48,9 @@ func main() {
 	http.HandleFunc("/change-species/", handleChangeSpecies)
 
 	log.Print("Serving mycolog v0.2.0 from port 8080.")
-	go openInBrowserWhenServing("http://localhost:8080/")
+	if !*headless {
+		go openInBrowserWhenServing("http://localhost:8080/")
+	}
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
