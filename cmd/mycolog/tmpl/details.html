@@ -58,13 +58,13 @@
 				</textarea>
 				{{- if .Grow}}
 				<div class="pure-g">
-					<div class="pure-u-1-3 pure-u-md-1-4">
+					<div id="yield" class="pure-u-1-3 pure-u-md-1-4">
 						<label for="yield">Yield in Grams</label>
-						<input type="number" step="any" min="0" class="pure-u-23-24"
-							autocomplete="off" onchange="registerChange()"
+						<input type="number" step="any" min="0" id="yieldInput"
+							class="pure-u-23-24" autocomplete="off" onchange="registerChange()"
 							name="yield" value="{{with .Yield}}{{.}}{{end}}"/>
 					</div>
-					<div class="pure-u-2-3 pure-u-md-3-4">
+					<div id="yieldComment" class="pure-u-2-3 pure-u-md-3-4">
 						<label for="yieldComment">Remark</label>
 						<input type="text" name="yieldComment" onchange="registerChange()"
 							class="pure-u-1" autocomplete="off" value="{{.YieldComment}}"

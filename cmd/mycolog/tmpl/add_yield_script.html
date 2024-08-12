@@ -1,0 +1,67 @@
+{{define "script2"}}
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var addYieldHTML = `
+			<div class="pure-u-1-5 pure-u-md-1-8">
+				<label for="addYieldBtn">&nbsp;</label>
+				<input type="button" id="addYieldBtn" class="pure-button"
+					onclick="addYield()" value="➕">
+			</div>`;
+		var addYieldDialogHTML = `
+			<dialog id="addYieldDialog">
+				<form class="pure-form pure-form-stacked" method="dialog"
+					onsubmit="finishAddingYield()">
+					<fieldset>
+						<label for="newYield">Additional Yield in Grams</label>
+						<input type="number" step="any" min="0" id="newYield"
+							autocomplet="off"/>
+						<span class="pure-form-message" id="addYieldExplanation"></span>
+						<button type="button" class="pure-button" onclick="abortAddingYield()">
+							Abort
+						</button>
+						<button type="submit" class="pure-button pure-button-primary">
+							Add Yield
+						</button>
+					</fieldset>
+				</form>
+			</dialog>`;
+
+		var yield = document.getElementById('yield');
+		yield.className = 'pure-u-2-5 pure-u-md-1-4';
+		yield.insertAdjacentHTML('afterend', addYieldHTML);
+
+		document.body.insertAdjacentHTML('beforeend', addYieldDialogHTML);
+
+		var yieldComment = document.getElementById('yieldComment');
+		yieldComment.className = 'pure-u-2-5 pure-u-md-5-8';
+	});
+
+	function addYield() {
+		var yield = document.getElementById('yieldInput');
+		var prev = parseFloat(yield.value) || 0;
+		var explanation = document.getElementById('addYieldExplanation');
+		explanation.textContent = `This will be added to the existing ${prev}\xa0g.`;
+		document.getElementById('addYieldDialog').showModal();
+	}
+
+	function abortAddingYield() {
+		document.getElementById('addYieldDialog').close();
+	}
+
+	function finishAddingYield() {
+		var newYield = document.getElementById('newYield');
+		var newYieldFloat = parseFloat(newYield.value);
+		if (!isNaN(newYieldFloat) && isFinite(newYield.value)) {
+			var yield = document.getElementById('yieldInput');
+			var prev = parseFloat(yield.value) || 0;
+			// The additional parseFloat removes trailing zeros:
+			yield.value = parseFloat((prev + newYieldFloat).toFixed(3));
+			newYield.value = '';
+			registerChange();
+		} else {
+			alert('Could not add yield!');
+		}
+		document.getElementById('addYieldDialog').close();
+	}
+</script>
+{{end}}

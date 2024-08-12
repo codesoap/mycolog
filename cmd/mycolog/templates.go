@@ -29,7 +29,7 @@ func init() {
 		"list":          {"base", "auto_apply_filter", "overview", "list"},
 		"error":         {"base", "error"},
 		"add":           {"base", "register_change_script", "add"},
-		"details":       {"base", "register_change_script", "details"},
+		"details":       {"base", "register_change_script", "add_yield_script", "details"},
 		"delete":        {"base", "delete"},
 		"changeSpecies": {"base", "register_change_script", "change_species"},
 	}
