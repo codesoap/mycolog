@@ -28,62 +28,79 @@
 	<p>{{$typeName}} updated</p>
 </div>
 {{end}}
-<h1>{{$typeName}} {{.Token}}</h1>
 <div class="pure-g">
 	<div class="pure-u-1 pure-u-md-1-24 pure-u-lg-1-8 pure-u-xl-1-4"></div>
 	<div class="pure-u-1 pure-u-md-22-24 pure-u-lg-3-4 pure-u-xl-1-2">
-		<form class="pure-form pure-form-stacked" method="POST" onsubmit="registerSubmit()">
-			<fieldset>
-				<span class="pure-form-message">
-					Component ID: #{{.ID}}
-				</span>
-				<span class="pure-form-message">
-					Species: {{.Species}}
-					<a href="/change-species/{{.ID}}">change</a>
-				</span>
-				<span class="pure-form-message">
-					Created from: {{.Parents}}
-				</span>
-				<span class="pure-form-message">
-					Transfers since spores: {{if .Transfers}}{{.Transfers}}{{else}}unknown{{end}}
-				</span>
-				<label for="createdAt">{{$createdAtLabel}}</label>
-				<input type="date" name="createdAt" class="pure-input-1"
-					value="{{.CreatedAt}}" autocomplete="off"
-					onchange="registerChange()" required>
-				<label for="notes">Notes</label>
-				<textarea id="notes" name="notes" rows="8" class="pure-input-1"
-					autocomplete="off" onchange="registerChange()">
-					{{- .Notes -}}
-				</textarea>
-				{{- if .Grow}}
-				<div class="pure-g">
-					<div id="yield" class="pure-u-1-3 pure-u-md-1-4">
-						<label for="yield">Yield in Grams</label>
-						<input type="number" step="any" min="0" id="yieldInput"
-							class="pure-u-23-24" autocomplete="off" onchange="registerChange()"
-							name="yield" value="{{with .Yield}}{{.}}{{end}}"/>
-					</div>
-					<div id="yieldComment" class="pure-u-2-3 pure-u-md-3-4">
-						<label for="yieldComment">Remark</label>
-						<input type="text" name="yieldComment" onchange="registerChange()"
-							class="pure-u-1" autocomplete="off" value="{{.YieldComment}}"
-							placeholder="e.g. three fruit bodies from two flushes"/>
-					</div>
+		<hgroup>
+			<h1>{{$typeName}} {{.Token}}</h1>
+			<p>The component ID is #{{.ID}}.
+			{{if eq 0 (len .Parents) -}}
+			It was aquired from an external source.
+			{{else if eq 1 (len .Parents) -}}
+			It was created from component
+			{{with index .Parents 0}}<a href="/component/{{.}}">#{{.}}</a>.{{end}}
+			{{else -}}
+			It was created from these components:
+			{{range $i, $id := .Parents -}}
+				{{- if gt $i 0 -}}, {{end -}}
+				<a href="/component/{{$id}}">#{{$id}}</a>
+			{{- end -}}
+			{{- end -}}
+			</p>
+		</hgroup>
+		<form class="pure-form pure-form-stacked">
+			<div class="pure-g">
+				<div class="pure-u-1-2">
+					<label for="species">
+						Species (<a href="/change-species/{{.ID}}">change</a>)
+					</label>
+					<input type="text" id="species" class="pure-u-23-24"
+						value="{{.Species}}" readonly>
 				</div>
-				{{- end}}
-				<label for="gone" class="pure-checkbox">
-					<input id="gone" name="gone" type="checkbox" autocomplete="off"
-						value="true" onchange="registerChange()"{{if .Gone}} checked{{end}}>
-					{{if .Spores}}These {{$typeName}} are
-					{{- else}}This {{$typeName}} is{{end}} already gone.
-				</label>
-				<a href="{{$backLink}}" class="pure-button">Go back</a>
-				<a href="/delete-component-dialog/{{.ID}}" class="pure-button">Delete</a>
-				<button type="submit" class="pure-button pure-button-primary">
-					Update
-				</button>
-			</fieldset>
+				<div class="pure-u-1-2">
+					<label for="transfers">Transfers since Spores</label>
+					<input type="text" id="transfers" class="pure-u-1"
+						value="{{if .Transfers}}{{.Transfers}}{{else}}unknown{{end}}" readonly>
+				</div>
+			</div>
+		</form>
+		<form class="pure-form pure-form-stacked" method="POST" onsubmit="registerSubmit()">
+			<label for="createdAt">{{$createdAtLabel}}</label>
+			<input type="date" name="createdAt" class="pure-input-1"
+				value="{{.CreatedAt}}" autocomplete="off"
+				onchange="registerChange()" required>
+			<label for="notes">Notes</label>
+			<textarea id="notes" name="notes" rows="8" class="pure-input-1"
+				autocomplete="off" onchange="registerChange()">
+				{{- .Notes -}}
+			</textarea>
+			{{- if .Grow}}
+			<div class="pure-g">
+				<div id="yield" class="pure-u-1-3 pure-u-md-1-4">
+					<label for="yield">Yield in Grams</label>
+					<input type="number" step="any" min="0" id="yieldInput"
+						class="pure-u-23-24" autocomplete="off" onchange="registerChange()"
+						name="yield" value="{{with .Yield}}{{.}}{{end}}"/>
+				</div>
+				<div id="yieldComment" class="pure-u-2-3 pure-u-md-3-4">
+					<label for="yieldComment">Remark</label>
+					<input type="text" name="yieldComment" onchange="registerChange()"
+						class="pure-u-1" autocomplete="off" value="{{.YieldComment}}"
+						placeholder="e.g. three fruit bodies from two flushes"/>
+				</div>
+			</div>
+			{{- end}}
+			<label for="gone" class="pure-checkbox">
+				<input id="gone" name="gone" type="checkbox" autocomplete="off"
+					value="true" onchange="registerChange()"{{if .Gone}} checked{{end}}>
+				{{if .Spores}}These {{$typeName}} are
+				{{- else}}This {{$typeName}} is{{end}} already gone.
+			</label>
+			<a href="{{$backLink}}" class="pure-button">Go back</a>
+			<a href="/delete-component-dialog/{{.ID}}" class="pure-button">Delete</a>
+			<button type="submit" class="pure-button pure-button-primary">
+				Update
+			</button>
 		</form>
 		<hr>
 	</div>

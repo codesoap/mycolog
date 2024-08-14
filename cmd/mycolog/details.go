@@ -17,8 +17,8 @@ import (
 
 type componentTmplData struct {
 	ID        int64
-	Parents   string // User readable representation of the parents.
-	Transfers *int   // Transfers since spores.
+	Parents   []int64 // IDs of the parents.
+	Transfers *int    // Transfers since spores.
 	Spores    bool
 	Myc       bool
 	Spawn     bool
@@ -102,7 +102,7 @@ func updateGrowInfo(r *http.Request, compID int64) error {
 }
 
 func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Component) {
-	parents, err := getParentsString(comp.ID)
+	parents, err := db.GetParents(comp.ID)
 	if err != nil {
 		showError(w, err, r.URL.Path)
 		return
@@ -139,25 +139,6 @@ func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Compo
 	if err := tmpls["details"].Execute(w, data); err != nil {
 		log.Println(err.Error())
 	}
-}
-
-func getParentsString(id int64) (string, error) {
-	parents, err := db.GetParents(id)
-	if err != nil {
-		return "", err
-	}
-	var parentsString string
-	for i, parent := range parents {
-		if i == 0 {
-			parentsString += fmt.Sprint("#", parent)
-		} else {
-			parentsString += fmt.Sprint(", #", parent)
-		}
-	}
-	if len(parentsString) == 0 {
-		return "none", nil
-	}
-	return parentsString, nil
 }
 
 func getGraph(id int64, fullgraph bool) (string, error) {
