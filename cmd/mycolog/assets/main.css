@@ -37,6 +37,7 @@ table {
 
 table.centered {
 	margin-top: 2ch;
+	margin-bottom: 2ch;
 	margin-left: auto;
 	margin-right: auto;
 }
