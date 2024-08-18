@@ -47,7 +47,7 @@ func main() {
 	http.HandleFunc("/delete-component/", handleDeleteComponent)
 	http.HandleFunc("/change-species/", handleChangeSpecies)
 
-	log.Print("Serving mycolog v0.2.0 from port 8080.")
+	log.Print("Serving mycolog v0.3.0 from port 8080.")
 	if !*headless {
 		go openInBrowserWhenServing("http://localhost:8080/")
 	}
