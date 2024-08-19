@@ -1,8 +1,18 @@
 .sidebar {
+	width: 10em;
 	position: fixed;
 	top: 0;
 	bottom: 0;
 	background-color: #f2f2f2;
+}
+
+.main-wrapper {
+	margin-left: 10em;
+}
+
+.padded {
+	padding-left: 1em;
+	padding-right: 1em;
 }
 
 .sidebar .pure-menu-selected {
@@ -18,13 +28,12 @@
 }
 
 .main {
-	margin-left: 25%;
-	padding-left: 2ch;
-	padding-right: 2ch;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .filter {
-	padding: 1ch;
+	padding: 0.5em;
 }
 
 .filter select {
@@ -36,14 +45,20 @@ table {
 }
 
 table.centered {
-	margin-top: 2ch;
-	margin-bottom: 2ch;
+	margin-top: 1em;
+	margin-bottom: 1em;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 .centered {
 	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.centered-column {
+	max-width: 52em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -58,16 +73,6 @@ hr {
 
 hgroup {
 	text-align: center;
-}
-
-.pure-button.add-button {
-	position: fixed;
-	bottom: 2ch;
-	right: 2ch;
-	padding: 2ch;
-	border-radius: 1ch;
-	background: #a273ff;
-	color: white;
 }
 
 .pure-button.danger {
@@ -106,11 +111,10 @@ hgroup {
 	}
 }
 
-/* Adapt to purecss' .pure-u-md-* : */
-@media screen and (min-width: 48em) {
-	.main {
-		margin-left: 16.67%;
-	}
+/* Make navigator wider on wide screens. */
+@media screen and (min-width: 64em) {
+	.sidebar { width: 16em; }
+	.main-wrapper { margin-left: 16em; }
 }
 
 /* https://unpkg.com/purecss@1.0.1/build/pure-min.css */
