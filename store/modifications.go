@@ -77,6 +77,20 @@ func (db DB) UpdateComponent(id int64, createdAt time.Time, notes string, gone b
 		}
 	}
 
+	childrenIDs, err := db.GetChildren(id)
+	if err != nil {
+		return err
+	}
+	children, err := db.GetComponents(childrenIDs)
+	if err != nil {
+		return err
+	}
+	for _, child := range children {
+		if createdAt.Sub(child.CreatedAt) > 0 {
+			return fmt.Errorf("the new creation date is too recent")
+		}
+	}
+
 	query := `UPDATE component SET createdAt = ?, notes = ?, gone = ? ` +
 		`WHERE id = ? `
 	_, err = db.Exec(query,
