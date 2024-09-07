@@ -217,8 +217,8 @@ func getParents(r *http.Request, createdAt time.Time) (parents []int64, species 
 		if component.Species != species {
 			err = fmt.Errorf("not all parents have the same species")
 			return
-		} else if component.CreatedAt.Sub(createdAt) >= 0 {
-			err = fmt.Errorf("a parent was not created before the new component")
+		} else if component.CreatedAt.Sub(createdAt) > 0 {
+			err = fmt.Errorf("at least one parent was created after the new component")
 			return
 		}
 	}
