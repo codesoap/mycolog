@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
+	"sort"
 	"strings"
 	"time"
 
@@ -33,15 +34,31 @@ func getGraphDescription(relatives []graph.Relative, selectedID int64) string {
 			desc.WriteString(fmt.Sprintf("\t%d -> %d\n", r.Component.ID, child))
 		}
 	}
-	for _, rank := range ranks {
+	for i, rank := range toSortedRankKeys(ranks) {
+		// Create "ordering node" for this rank:
+		desc.WriteString(fmt.Sprintf("\to%d [style=invis width=0.01 fontsize=1]\n", i))
+		if i > 0 {
+			desc.WriteString(fmt.Sprintf("\to%d -> o%d [style=invis]\n", i-1, i))
+		}
+
 		desc.WriteString("{rank = same;")
-		for _, id := range rank {
+		desc.WriteString(fmt.Sprintf(" o%d;", i))
+		for _, id := range ranks[rank] {
 			desc.WriteString(fmt.Sprintf(" %d;", id))
 		}
 		desc.WriteString("}\n")
 	}
 	desc.WriteString("}\n")
 	return desc.String()
+}
+
+func toSortedRankKeys(in map[time.Time][]int64) []time.Time {
+	keys := make([]time.Time, 0, len(in))
+	for key := range in {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool { return keys[i].Before(keys[j]) })
+	return keys
 }
 
 func getNodeDesc(relative graph.Relative, selectedID int64) string {
