@@ -7,6 +7,7 @@ import (
 // A Relative represents a component together with its children.
 type Relative struct {
 	Component store.Component
+	Parents   []int64
 	Children  []int64
 }
 
@@ -104,11 +105,15 @@ func getAncestors(db store.DB, roots []int64) ([]Relative, error) {
 		if err != nil {
 			return nil, err
 		}
+		currParents, err := db.GetParents(currID)
+		if err != nil {
+			return nil, err
+		}
 		component, err := db.GetComponent(currID)
 		if err != nil {
 			return nil, err
 		}
-		relative := Relative{Component: component, Children: currChildren}
+		relative := Relative{Component: component, Parents: currParents, Children: currChildren}
 		relatives = append(relatives, relative)
 		queue = append(queue, currChildren...)
 	}

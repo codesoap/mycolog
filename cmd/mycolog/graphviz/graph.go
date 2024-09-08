@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -27,7 +28,25 @@ func getGraphDescription(relatives []graph.Relative, selectedID int64) string {
 	for _, relative := range relatives {
 		desc.WriteString(getNodeDesc(relative, selectedID))
 		rank := ranks[relative.Component.CreatedAt]
-		ranks[relative.Component.CreatedAt] = append(rank, relative.Component.ID)
+		newrank := false
+		// If a child and parent have the same date, we don't want to put them
+		// on the same rank
+		for _, parent := range relative.Parents {
+			if slices.Contains(rank, parent) {
+				newrank = true
+				break
+			}
+		}
+		if newrank == true {
+			// since the date only contains the Y-M-D and the rest of the time
+			// structure is zero'd, we can force a new rank without impacting
+			// other dates by adding some a duration that's less than a whole
+			// day. We'll just use 1 ns for simplicity.
+			midrank := ranks[relative.Component.CreatedAt.Add(1)]
+			ranks[relative.Component.CreatedAt.Add(1)] = append(midrank, relative.Component.ID)
+		} else {
+			ranks[relative.Component.CreatedAt] = append(rank, relative.Component.ID)
+		}
 	}
 	for _, r := range relatives {
 		for _, child := range r.Children {
