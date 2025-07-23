@@ -5,9 +5,12 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/codesoap/mycolog/store"
+	"github.com/codesoap/mycolog/store/pics"
 	"github.com/pkg/browser"
 )
 
@@ -15,6 +18,7 @@ import (
 var assets embed.FS
 
 var db store.DB
+var picStore pics.PictureStore
 
 func init() {
 	dbFilename, err := getDBFilename()
@@ -26,14 +30,25 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	dataDir, err := getDataDir()
+	if err != nil {
+		panic(err)
+	}
+	picStore = pics.PictureStore{Path: filepath.Join(dataDir, "pics")}
+	if err := os.MkdirAll(picStore.Path, 0755); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
 	headless := flag.Bool("headless", false, "run mycolog without opening a browser")
 	flag.Parse()
 
+	picsServer := http.StripPrefix("/pics/", http.FileServer(http.Dir(picStore.Path)))
 	http.HandleFunc("GET /", redirectToDefaultPage)
 	http.Handle("GET /assets/", http.FileServer(http.FS(assets)))
+	http.Handle("GET /pics/", picsServer)
 	http.HandleFunc("GET /intro", serveIntro)
 	http.HandleFunc("GET /spores", serveComponentList)
 	http.HandleFunc("GET /mycelium", serveComponentList)
@@ -49,6 +64,9 @@ func main() {
 	http.HandleFunc("POST /add-grow", handleAddComponent)
 	http.HandleFunc("GET /component/{id}", serveComponent)
 	http.HandleFunc("POST /component/{id}", handleComponentUpdate)
+	http.HandleFunc("GET /components-pictures/{id}", servePictures)
+	http.HandleFunc("POST /components-pictures/{id}", addPictures)
+	http.HandleFunc("GET /delete-picture/{name}", deletePicture)
 	http.HandleFunc("GET /delete-component-dialog/{id}", serveDeleteComponentDialog)
 	http.HandleFunc("GET /delete-component/{id}", handleDeleteComponent)
 	http.HandleFunc("GET /change-species/{id}", serveChangeSpecies)

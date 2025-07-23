@@ -11,6 +11,7 @@ import (
 	"github.com/codesoap/mycolog/cmd/mycolog/graphviz"
 	"github.com/codesoap/mycolog/graph"
 	"github.com/codesoap/mycolog/store"
+	"github.com/codesoap/mycolog/store/pics"
 )
 
 type componentTmplData struct {
@@ -31,6 +32,8 @@ type componentTmplData struct {
 	YieldComment string
 
 	Updated bool
+
+	Pictures []pics.PictureName
 
 	FullGraph bool
 	Graph     template.HTML
@@ -131,6 +134,7 @@ func handleGetComponent(w http.ResponseWriter, r *http.Request, comp store.Compo
 		CreatedAt: comp.CreatedAt.Format("2006-01-02"),
 		Notes:     comp.Notes,
 		Gone:      comp.Gone,
+		Pictures:  picStore.Pictures(comp.ID),
 		FullGraph: r.FormValue("fullgraph") == "true",
 		Graph:     template.HTML(graph),
 	}

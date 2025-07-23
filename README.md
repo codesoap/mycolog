@@ -1,7 +1,7 @@
 mycolog helps you keep an overview of your mushroom cultivation
-projects. It can store notes for each component, so that it's easier to
-remember which experiments succeeded and which failed. Genetics can be
-traced through family trees.
+projects. It can store notes and pictures for each component, so that
+it's easier to remember which experiments succeeded and which failed.
+Genetics can be traced through family trees.
 
 Visit [codesoap.github.io/mycolog](https://codesoap.github.io/mycolog/)
 to see a video introduction to mycolog.

@@ -30,6 +30,7 @@ func init() {
 		"error":         {"base", "error"},
 		"add":           {"base", "register_change_script", "add"},
 		"details":       {"base", "register_change_script", "add_yield_script", "details"},
+		"pictures":      {"base", "pictures"},
 		"delete":        {"base", "delete"},
 		"changeSpecies": {"base", "register_change_script", "change_species"},
 	}

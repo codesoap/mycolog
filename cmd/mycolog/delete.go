@@ -32,6 +32,11 @@ func handleDeleteComponent(w http.ResponseWriter, r *http.Request) {
 		showError(w, err, "/intro")
 		return
 	}
+	if err = picStore.DeleteForComponent(id); err != nil {
+		err = fmt.Errorf("could not delete pictures: %s", err)
+		showError(w, err, fmt.Sprint("/component/", id))
+		return
+	}
 	if err = db.DeleteComponent(id); err != nil {
 		showError(w, err, fmt.Sprint("/component/", id))
 		return

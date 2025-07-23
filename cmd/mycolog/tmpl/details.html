@@ -95,6 +95,7 @@
 			{{- else}}This {{$typeName}} is{{end}} already gone.
 		</label>
 		<a href="{{$backLink}}" class="pure-button">Go back</a>
+		<a href="/components-pictures/{{.ID}}" class="pure-button">Edit Pictures</a>
 		<a href="/delete-component-dialog/{{.ID}}" class="pure-button">Delete</a>
 		<button type="submit" class="pure-button pure-button-primary">
 			Update
@@ -102,6 +103,20 @@
 	</form>
 	<hr>
 </div>
+{{if .Pictures}}
+<div class="centered-column padded">
+	<div class="images">
+		{{range .Pictures}}
+		<div class="img-card">
+			<a href="/pics/{{.}}" target="_blank" class="img-container">
+				<img src="/pics/{{.}}">
+			</a>
+		</div>
+		{{end}}
+	</div>
+	<hr>
+</div>
+{{end}}
 <div class="centered padded">
 	{{if and .Graph (not .FullGraph)}}
 	<a class="pure-button" href="?fullgraph=true">&uarr; Show all predecessors</a>

@@ -1,0 +1,39 @@
+{{define "title"}}
+{{$typeName := ""}}
+{{if .Spores}}{{$typeName = "spores"}}{{end}}
+{{if .Myc}}{{$typeName    = "mycelium"}}{{end}}
+{{if .Spawn}}{{$typeName  = "spawn"}}{{end}}
+{{if .Grow}}{{$typeName   = "grow"}}{{end}}
+{{.Token}} ({{$typeName}}) | Pictures
+{{end}}
+
+{{define "body"}}
+{{$typeName := ""}}
+{{if .Spores}}{{$typeName = "Spores"}}{{end}}
+{{if .Myc}}{{$typeName    = "Mycelium"}}{{end}}
+{{if .Spawn}}{{$typeName  = "Spawn"}}{{end}}
+{{if .Grow}}{{$typeName   = "Grow"}}{{end}}
+<div class="centered-column padded">
+	<hgroup>
+		<h1>Pictures of {{$typeName}} {{.Token}}</h1>
+	</hgroup>
+	<div class="images">
+		{{range .Pictures}}
+		<div class="img-card">
+			<a href="/pics/{{.}}" target="_blank" class="img-container">
+				<img src="/pics/{{.}}">
+			</a>
+			<a href="/delete-picture/{{.}}?component-id={{$.ID}}"
+				title="Delete Picture" class="pure-button danger">X</a>
+		</div>
+		{{end}}
+	</div>
+	<form class="pure-form" method="post" enctype="multipart/form-data">
+		<a href="/component/{{.ID}}" class="pure-button">Go Back</a>
+		<label for="newPic" style="display:inline" class="pure-button">Select New Picture(s)</label>
+		<input type="file" id="newPic" style="display:none" name="file"
+			accept=".jpg,.jpeg,image/jpeg" multiple required>
+		<input type="submit" value="Add Selected Picture(s)" class="pure-button pure-button-primary">
+	</form>
+</div>
+{{end}}
