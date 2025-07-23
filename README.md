@@ -32,10 +32,10 @@ executable file using [rcedit](https://github.com/electron/rcedit):
 `rcedit .\mycolog.exe --set-icon .\docs\favicon\favicon.ico`
 
 # Backups
-mycolog stores all its data in a single file. On Windows
-you'll find it in your user profile folder, usually
-`C:\Users\<your-username>\mycolog.sqlite3`.
+mycolog stores all its data in a single directory called "mycolog".
+On Windows you'll find it in your user profile folder, usually
+`C:\Users\<your-username>\mycolog\`.
 
-On Linux and other unix-like operating systems, you'll find it at
+On Linux and other unix-like operating systems, you'll find it inside
 `XDG_DATA_HOME`, if this environment variable is set. Otherwise it will
-be located at `~/.local/share/mycolog.sqlite3`.
+be located at `~/.local/share/mycolog`.

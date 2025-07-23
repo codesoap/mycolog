@@ -24,14 +24,14 @@ To build mycolog for a different operating system and more, take a look
 at [the GitHub page](https://github.com/codesoap/mycolog?tab=readme-ov-file#installation).
 
 # Backups
-mycolog stores all its data in a single file. On Windows
-you'll find it in your user profile folder, usually
-`C:\Users\<your-username>\mycolog.sqlite3`. Make sure to create backups
-of this file, so that your data is not lost when your computer breaks.
+mycolog stores all its data in a single directory called "mycolog".
+On Windows you'll find it in your user profile folder, usually
+`C:\Users\<your-username>\mycolog\`. Make sure to create backups of this
+directory, so that your data is not lost when your computer breaks.
 
-On Linux and other unix-like operating systems, you'll find the file at
+On Linux and other unix-like operating systems, you'll find it inside
 `XDG_DATA_HOME`, if this environment variable is set. Otherwise it will
-be located at `~/.local/share/mycolog.sqlite3`.
+be located at `~/.local/share/mycolog`.
 
 # Screenshots
 ![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.3.0/overview.png)

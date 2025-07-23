@@ -11,19 +11,46 @@ import (
 )
 
 func getDBFilename() (string, error) {
-	dbDir := os.Getenv("XDG_DATA_HOME")
-	if dbDir == "" {
+	dataDir, err := getDataDir()
+	return filepath.Join(dataDir, "mycolog.sqlite3"), err
+}
+
+func getDataDir() (string, error) {
+	dataDir := os.Getenv("XDG_DATA_HOME")
+	if dataDir == "" {
 		home := os.Getenv("HOME")
 		if home == "" {
 			return "", errors.New("could not find a place for the database")
 		}
-		dbDir = filepath.Join(home, ".local", "share")
+		dataDir = filepath.Join(home, ".local", "share")
 	}
-	if _, err := os.Stat(dbDir); os.IsNotExist(err) {
-		log.Printf("Creating directory '%s' for the database file.\n", dbDir)
-		if err := os.MkdirAll(dbDir, 0755); err != nil {
+	dataDir = filepath.Join(dataDir, "mycolog")
+	if _, err := os.Stat(dataDir); os.IsNotExist(err) {
+		log.Printf("Creating data directory '%s'.\n", dataDir)
+		if err := os.MkdirAll(dataDir, 0755); err != nil {
 			return "", err
 		}
 	}
-	return filepath.Join(dbDir, "mycolog.sqlite3"), nil
+	return dataDir, nil
+}
+
+func migrateDBFileTo(dbFilename string) error {
+	dbFilenameV1, err := getDBFilenameV1()
+	if err != nil {
+		return err
+	}
+	// Ignore error; it's OK if there is nothing to migrate:
+	_ = os.Rename(dbFilenameV1, dbFilename)
+	return nil
+}
+
+// getDBFilenameV1 returns the filename of the first and now deprecated
+// path of the database.
+func getDBFilenameV1() (string, error) {
+	dataDir, err := getDataDir()
+	if err != nil {
+		return "", err
+	}
+	oldDataDir := filepath.Dir(dataDir) // Trim "/mycolog".
+	return filepath.Join(oldDataDir, "mycolog.sqlite3"), nil
 }

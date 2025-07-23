@@ -21,6 +21,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	migrateDBFileTo(dbFilename)
 	db, err = store.GetDB(dbFilename)
 	if err != nil {
 		panic(err)
