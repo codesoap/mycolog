@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/codesoap/mycolog/graph"
 )
@@ -15,25 +14,12 @@ type changeSpeciesTmplData struct {
 	KnownSpecies []string
 }
 
-func handleChangeSpecies(w http.ResponseWriter, r *http.Request) {
-	pathSplit := strings.Split(r.URL.Path, "/")
-	if len(pathSplit) != 3 {
-		showError(w, fmt.Errorf("invalid URL"), r.URL.Path)
-		return
-	}
-	id, err := strconv.ParseInt(pathSplit[len(pathSplit)-1], 10, 64)
+func serveChangeSpecies(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		showError(w, err, r.URL.Path)
 		return
 	}
-	if r.Method == http.MethodPost {
-		handleUpdateSpecies(w, r, id)
-		return
-	}
-	serveChangeSpecies(w, id)
-}
-
-func serveChangeSpecies(w http.ResponseWriter, id int64) {
 	knownSpecies, err := db.GetAllSpecies()
 	if err != nil {
 		showError(w, err, fmt.Sprint("/component/", id))
@@ -49,7 +35,12 @@ func serveChangeSpecies(w http.ResponseWriter, id int64) {
 	}
 }
 
-func handleUpdateSpecies(w http.ResponseWriter, r *http.Request, id int64) {
+func handleChangeSpecies(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		showError(w, err, r.URL.Path)
+		return
+	}
 	species := r.FormValue("species")
 	if len(species) == 0 {
 		showError(w, fmt.Errorf("species is empty"), r.URL.Path)

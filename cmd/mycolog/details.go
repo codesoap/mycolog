@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"math"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/codesoap/mycolog/cmd/mycolog/graphviz"
@@ -38,13 +36,8 @@ type componentTmplData struct {
 	Graph     template.HTML
 }
 
-func handleComponent(w http.ResponseWriter, r *http.Request) {
-	pathSplit := strings.Split(r.URL.Path, "/")
-	if len(pathSplit) != 3 {
-		showError(w, fmt.Errorf("invalid component URL"), r.URL.Path)
-		return
-	}
-	id, err := strconv.ParseInt(pathSplit[len(pathSplit)-1], 10, 64)
+func serveComponent(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		showError(w, err, r.URL.Path)
 		return
@@ -54,11 +47,21 @@ func handleComponent(w http.ResponseWriter, r *http.Request) {
 		showError(w, err, r.URL.Path)
 		return
 	}
-	if r.Method == http.MethodPost {
-		handleUpdateComponent(w, r, comp)
+	handleGetComponent(w, r, comp)
+}
+
+func handleComponentUpdate(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		showError(w, err, r.URL.Path)
 		return
 	}
-	handleGetComponent(w, r, comp)
+	comp, err := db.GetComponent(id)
+	if err != nil {
+		showError(w, err, r.URL.Path)
+		return
+	}
+	handleUpdateComponent(w, r, comp)
 }
 
 func handleUpdateComponent(w http.ResponseWriter, r *http.Request, comp store.Component) {

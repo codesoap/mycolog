@@ -5,18 +5,12 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/codesoap/mycolog/store"
 )
 
 func serveDeleteComponentDialog(w http.ResponseWriter, r *http.Request) {
-	pathSplit := strings.Split(r.URL.Path, "/")
-	if len(pathSplit) != 3 {
-		showError(w, fmt.Errorf("invalid delete URL"), "/intro")
-		return
-	}
-	id, err := strconv.ParseInt(pathSplit[len(pathSplit)-1], 10, 64)
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		showError(w, err, "/intro")
 		return
@@ -28,12 +22,7 @@ func serveDeleteComponentDialog(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleDeleteComponent(w http.ResponseWriter, r *http.Request) {
-	pathSplit := strings.Split(r.URL.Path, "/")
-	if len(pathSplit) != 3 {
-		showError(w, fmt.Errorf("invalid delete URL"), "/intro")
-		return
-	}
-	id, err := strconv.ParseInt(pathSplit[len(pathSplit)-1], 10, 64)
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		showError(w, err, "/intro")
 		return

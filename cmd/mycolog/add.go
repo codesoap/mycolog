@@ -23,58 +23,61 @@ type addComponentTmplData struct {
 	IsFirst         bool
 }
 
-func handleAddComponent(w http.ResponseWriter, r *http.Request) {
-	// TODO: split into smaller functions.
+func serveAddComponent(w http.ResponseWriter, r *http.Request) {
 	componentType, err := componentTypeFromPath(r.URL.Path)
 	if err != nil {
 		showError(w, err, "/intro")
 		return
 	}
-	if r.Method == http.MethodPost {
-		var id int64
-		if r.FormValue("parent1") == "" {
-			id, err = addAcquiredComponent(r, componentType)
-		} else {
-			id, err = addCreatedComponents(r, componentType)
-		}
-		if err != nil {
-			showError(w, err, r.URL.Path)
-			return
-		}
-		http.Redirect(w, r, fmt.Sprint("/component/", id), http.StatusSeeOther)
+	possibleParents, err := getPossibleParentIdentifiers()
+	if err != nil {
+		showError(w, err, r.URL.Path)
 		return
-	} else {
-		possibleParents, err := getPossibleParentIdentifiers()
-		if err != nil {
-			showError(w, err, r.URL.Path)
-			return
-		}
-		knownSpecies, err := db.GetAllSpecies()
-		if err != nil {
-			showError(w, err, r.URL.Path)
-			return
-		}
-		componentsPresent, err := db.ComponentsPresent()
-		if err != nil {
-			showError(w, err, r.URL.Path)
-			return
-		}
-		w.Header().Add("Content-Type", "text/html")
-		data := addComponentTmplData{
-			Spores:          componentType == store.TypeSpores,
-			Myc:             componentType == store.TypeMycelium,
-			Spawn:           componentType == store.TypeSpawn,
-			Grow:            componentType == store.TypeGrow,
-			PossibleParents: possibleParents,
-			PrefilledParent: getPrefilledParentIdentifier(r.FormValue("from")),
-			KnownSpecies:    knownSpecies,
-			Today:           time.Now().Format("2006-01-02"),
-			IsFirst:         !componentsPresent,
-		}
-		if err := tmpls["add"].Execute(w, data); err != nil {
-			log.Println(err.Error())
-		}
 	}
+	knownSpecies, err := db.GetAllSpecies()
+	if err != nil {
+		showError(w, err, r.URL.Path)
+		return
+	}
+	componentsPresent, err := db.ComponentsPresent()
+	if err != nil {
+		showError(w, err, r.URL.Path)
+		return
+	}
+	w.Header().Add("Content-Type", "text/html")
+	data := addComponentTmplData{
+		Spores:          componentType == store.TypeSpores,
+		Myc:             componentType == store.TypeMycelium,
+		Spawn:           componentType == store.TypeSpawn,
+		Grow:            componentType == store.TypeGrow,
+		PossibleParents: possibleParents,
+		PrefilledParent: getPrefilledParentIdentifier(r.FormValue("from")),
+		KnownSpecies:    knownSpecies,
+		Today:           time.Now().Format("2006-01-02"),
+		IsFirst:         !componentsPresent,
+	}
+	if err := tmpls["add"].Execute(w, data); err != nil {
+		log.Println(err.Error())
+	}
+}
+
+func handleAddComponent(w http.ResponseWriter, r *http.Request) {
+	componentType, err := componentTypeFromPath(r.URL.Path)
+	if err != nil {
+		showError(w, err, "/intro")
+		return
+	}
+	var id int64
+	if r.FormValue("parent1") == "" {
+		id, err = addAcquiredComponent(r, componentType)
+	} else {
+		id, err = addCreatedComponents(r, componentType)
+	}
+	if err != nil {
+		showError(w, err, r.URL.Path)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprint("/component/", id), http.StatusSeeOther)
 }
 
 // getPossibleParentIdentifiers finds components, that are not already
