@@ -8,7 +8,7 @@ to see a video introduction to mycolog.
 
 ![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.3.0/overview.png)
 
-![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.3.0/details.png)
+![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.4.0/details.png)
 
 # Installation
 You can download the precompiled program from the

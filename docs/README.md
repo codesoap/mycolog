@@ -14,8 +14,8 @@ Your browser does not support playing this video.
 </video>
 
 # Installation
-Download mycolog v0.3.0 for Windows:
-[mycolog.exe](https://github.com/codesoap/mycolog/releases/download/v0.3.0/mycolog.exe)
+Download mycolog v0.4.0 for Windows:
+[mycolog.exe](https://github.com/codesoap/mycolog/releases/download/v0.4.0/mycolog.exe)
 
 In order to see family trees, **you also need to install Graphviz**. You
 can download it [here](https://graphviz.org/download/#windows).
@@ -36,4 +36,4 @@ be located at `~/.local/share/mycolog`.
 # Screenshots
 ![screenshot of overview page](https://github.com/codesoap/mycolog/releases/download/v0.3.0/overview.png)
 
-![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.3.0/details.png)
+![screenshot of details page](https://github.com/codesoap/mycolog/releases/download/v0.4.0/details.png)
