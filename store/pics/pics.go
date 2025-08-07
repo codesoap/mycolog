@@ -108,7 +108,6 @@ func (s PictureStore) Delete(pictureName PictureName) error {
 			ext := filepath.Ext(string(pic))
 			old := filepath.Join(s.Path, string(pic))
 			new := filepath.Join(s.Path, expPrefix[:len(expPrefix)-1]+ext)
-			println("renaming", old, "to", new)
 			if err = os.Rename(old, new); err != nil {
 				format := "could not update file '%s' to '%s' name: %s"
 				return fmt.Errorf(format, old, new, err)
