@@ -72,11 +72,11 @@ func main() {
 	http.HandleFunc("GET /change-species/{id}", serveChangeSpecies)
 	http.HandleFunc("POST /change-species/{id}", handleChangeSpecies)
 
-	log.Print("Serving mycolog v0.4.0 from port 8080.")
+	log.Print("Serving mycolog v0.4.0 from port 8081.")
 	if !*headless {
-		go openInBrowserWhenServing("http://localhost:8080/")
+		go openInBrowserWhenServing("http://localhost:8081/")
 	}
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
 func openInBrowserWhenServing(url string) {

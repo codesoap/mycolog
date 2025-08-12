@@ -1,21 +1,21 @@
 package graphviz
 
 import (
+	"bytes"
+	"context"
 	"fmt"
-	"io"
-	"os/exec"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/codesoap/mycolog/graph"
 	"github.com/codesoap/mycolog/store"
+	"github.com/goccy/go-graphviz"
 )
 
 // Render takes a set of relatives and renders them into HTML code, that
 // will display a clickable image.
 func Render(relatives []graph.Relative, selectedID int64) (string, error) {
-	// TODO: Own error when 'dot' not found?
 	graphDescription := getGraphDescription(relatives, selectedID)
 	return toHTMLImage(graphDescription)
 }
@@ -102,25 +102,22 @@ func getNodeDesc(relative graph.Relative, selectedID int64) string {
 }
 
 func toHTMLImage(graphDescription string) (string, error) {
-	cmd := exec.Command("dot", "-Tsvg", "-Tcmapx")
-	stdin, err := cmd.StdinPipe()
+
+	ctx := context.Background()
+	g, err := graphviz.New(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	myBytes := []byte(graphDescription)
+	graph, err := graphviz.ParseBytes(myBytes)
+
 	if err != nil {
 		return "", err
 	}
-	go func() {
-		defer stdin.Close()
-		io.WriteString(stdin, graphDescription)
-	}()
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return "", err
-	}
-	if err := cmd.Start(); err != nil {
-		return "", err
-	}
-	out, err := io.ReadAll(stdout)
-	if err != nil {
-		return "", err
-	}
-	return `<img usemap="#family_tree">` + string(out) + `</img>`, cmd.Wait()
+
+	var buf bytes.Buffer
+	err = g.Render(ctx, graph, graphviz.SVG, &buf)
+
+	return `<img usemap="#family_tree">` + buf.String() + `</img>`, err
 }
